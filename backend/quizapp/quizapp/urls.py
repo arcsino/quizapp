@@ -15,12 +15,20 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 
-from django.contrib import admin
 from django.urls import path, include
+from django.contrib import admin
+from pathlib import Path
+import environ
 
+
+BASE_DIR = Path(__file__).resolve().parent.parent
+DOTENV_PATH = BASE_DIR / ".env"
+
+env = environ.Env()
+environ.Env.read_env(DOTENV_PATH)
 
 urlpatterns = [
-    path("admin/", admin.site.urls),
-    path("api/auth/", include("accounts.urls")),
-    path("api/quizzes/", include("quizzes.urls")),
+    path(route=env("ADMIN_ROUTE"), view=admin.site.urls),  # Admin route is secret.
+    path(route="api/auth/", view=include("accounts.urls")),
+    path(route="api/quiz/", view=include("quizzes.urls")),
 ]
