@@ -54,6 +54,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         ],
         error_messages={
             "unique": _("A user with that username already exists."),
+            "blank": _("This field cannot be blank."),
         },
     )
     email = models.EmailField(
@@ -61,6 +62,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         help_text=_("Required. Enter a valid email address."),
         error_messages={
             "unique": _("A user with that email already exists."),
+            "blank": _("This field cannot be blank."),
         },
     )
     nickname = models.CharField(
