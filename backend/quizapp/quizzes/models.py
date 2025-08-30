@@ -145,3 +145,10 @@ class Quiz(models.Model):
         verbose_name=_("Updated At"),
         help_text=_("Last update timestamp."),
     )
+
+    class Meta:
+        verbose_name = _("Quiz")
+        verbose_name_plural = _("Quizzes")
+
+    def __str__(self):
+        return self.question
