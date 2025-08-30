@@ -92,9 +92,17 @@ class Quiz(models.Model):
     """Model representing a quiz."""
 
     id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
-    question = models.JSONField(
+    question = models.TextField(
         verbose_name=_("Question"),
-        help_text=_("The question content in JSON format."),
+        max_length=500,
+        help_text=_("The question content in plain text. 500 characters or fewer."),
+        error_messages={
+            "blank": _("This field cannot be blank."),
+        },
+    )
+    answer = models.JSONField(
+        verbose_name=_("Answer"),
+        help_text=_("The correct answer(s) for the quiz question."),
         error_messages={
             "blank": _("This field cannot be blank."),
         },
@@ -114,6 +122,11 @@ class Quiz(models.Model):
         related_name="quizzes",
         verbose_name=_("Quiz Group"),
         help_text=_("The group this quiz belongs to."),
+    )
+    is_checked = models.BooleanField(
+        default=False,
+        verbose_name=_("Is Checked"),
+        help_text=_("Indicates whether the quiz has been checked."),
     )
     created_by = models.ForeignKey(
         to=User,

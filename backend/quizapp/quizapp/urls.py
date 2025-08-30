@@ -29,6 +29,6 @@ environ.Env.read_env(DOTENV_PATH)
 
 urlpatterns = [
     path(route=env("ADMIN_ROUTE"), view=admin.site.urls),  # Admin route is secret.
-    path(route="api/auth/", view=include("accounts.urls")),
-    path(route="api/quiz/", view=include("quizzes.urls")),
+    path(route="auth-api/", view=include("accounts.urls")),
+    path(route="quiz-api/", view=include("quizzes.urls")),
 ]

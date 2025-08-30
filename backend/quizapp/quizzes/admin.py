@@ -20,7 +20,7 @@ class QuizGroupAdmin(admin.ModelAdmin):
 
 @admin.register(Quiz)
 class QuizAdmin(admin.ModelAdmin):
-    list_display = ("id", "related_group", "created_by", "created_at", "updated_at")
-    search_fields = ("created_by__username", "related_group__title", "id")
+    list_display = ("question", "related_group", "created_by", "id")
+    search_fields = ("question", "created_by__username", "related_group__title", "id")
     readonly_fields = ("id", "created_at", "updated_at")
     ordering = ("-created_at",)
