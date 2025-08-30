@@ -122,7 +122,7 @@ class QuizGroupDeleteAPIView(generics.DestroyAPIView):
         quiz_group.delete()
         return Response(
             data={"message": "クイズグループの削除に成功しました。"},
-            status=status.HTTP_204_NO_CONTENT,
+            status=status.HTTP_200_OK,
         )
 
 
