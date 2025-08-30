@@ -148,20 +148,30 @@ class UserUpdateSerializer(serializers.ModelSerializer):
         email = data.get("email")
         nickname = data.get("nickname")
 
-        # Username uniqueness check
-        if User.objects.exclude(id=user_id).filter(username=username).exists():
+        if username and email and nickname:
+            # Username uniqueness check
+            if User.objects.exclude(id=user_id).filter(username=username).exists():
+                raise serializers.ValidationError(
+                    detail=f"**{username}**このユーザー名は既に使用されています。"
+                )
+            # Username format check
+            if not re.match(pattern=r"^[\w.@+-]+$", string=username):
+                raise serializers.ValidationError(
+                    detail=f"**{username}**このユーザー名は無効です。"
+                )
+            # Email uniqueness check
+            if User.objects.exclude(id=user_id).filter(email=email).exists():
+                raise serializers.ValidationError(
+                    detail=f"**{email}**このメールアドレスは既に使用されています。"
+                )
+            # Nickname uniqueness check
+            if User.objects.exclude(id=user_id).filter(nickname=nickname).exists():
+                raise serializers.ValidationError(
+                    detail=f"**{nickname}**このニックネームは既に使用されています。"
+                )
+        else:
             raise serializers.ValidationError(
-                detail=f"**{username}**このユーザー名は既に使用されています。"
-            )
-        # Email uniqueness check
-        if User.objects.exclude(id=user_id).filter(email=email).exists():
-            raise serializers.ValidationError(
-                detail=f"**{email}**このメールアドレスは既に使用されています。"
-            )
-        # Nickname uniqueness check
-        if User.objects.exclude(id=user_id).filter(nickname=nickname).exists():
-            raise serializers.ValidationError(
-                detail=f"**{nickname}**このニックネームは既に使用されています。"
+                detail="全てのフィールドを入力してください。"
             )
 
         return data

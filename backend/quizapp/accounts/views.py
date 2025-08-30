@@ -3,7 +3,6 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.authtoken.models import Token
 from rest_framework.permissions import IsAuthenticated
-from rest_framework.authentication import TokenAuthentication
 from django.contrib.auth import login
 from .serializers import (
     UserRegistrationSerializer,
@@ -80,7 +79,7 @@ class UserDetailAPIView(generics.RetrieveAPIView):
         )
 
 
-class UserUpdateAPIView(generics.RetrieveUpdateAPIView):
+class UserUpdateAPIView(generics.UpdateAPIView):
     """User update view."""
 
     serializer_class = UserUpdateSerializer
@@ -136,12 +135,29 @@ class PasswordChangeAPIView(generics.UpdateAPIView):
 class LogoutAPIView(APIView):
     """User logout view."""
 
-    authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]
 
     def post(self, request, *args, **kwargs):
         request.auth.delete()
         return Response(
             data={"message": "ログアウトに成功しました。"},
+            status=status.HTTP_200_OK,
+        )
+
+
+class UserDeleteAPIView(generics.DestroyAPIView):
+    """User delete view."""
+
+    permission_classes = [IsAuthenticated]
+
+    def get_object(self):
+        # Always return the authenticated user
+        return self.request.user
+
+    def delete(self, request, *args, **kwargs):
+        instance = self.get_object()
+        self.perform_destroy(instance)
+        return Response(
+            data={"message": "ユーザーの削除に成功しました。"},
             status=status.HTTP_200_OK,
         )
